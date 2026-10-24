@@ -10,9 +10,11 @@ import SayIt.basic.SIString;
 import SayIt.main.Compiled;
 import java.util.HashMap;
 import java.util.List;
+import SayIt.basic.SIBoolean;
 
 public class EXPRESSION_Runner
 {
+    
     public static EXPRESSION_Result run(Compiled compiled,int expression_no,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
         Integer[] expression = compiled.expressions[expression_no];
         
@@ -26,59 +28,9 @@ public class EXPRESSION_Runner
                 if(op == -1){
                     op = expression[ind];
                 }else{
-                    SIObject now = null;
-                    switch(expression[ind]){
-                        case SIRunner.VALUE:
-                            Number num = compiled.numpool[expression[ind+1]];
-                            now = getNumber(num);
-                            ind++;
-                            break;
-                        case SIRunner.POOL:
-                            String pool = compiled.pool[expression[ind+1]];
-                            SIString s = new SIString();
-                            s.set(pool);
-                            now = s;
-                            ind++;
-                            break;
-                        case SIRunner.VAR: {
-                                String nme = compiled.pool[expression[ind + 1]];
-                                SIObject var = null;
-
-                                int nmeindex = names.indexOf(nme);
-
-                                if (nmeindex >= 0 && nmeindex < extravalues.size()) {
-                                    var = SIRunner.getVariable(extravalues.get(nmeindex));
-                                }
-
-                                // Fall back to the current variable map if lookup failed.
-                                if (var == null && variables.containsKey(nme)) {
-                                    var = SIRunner.getVariable(variables.get(nme));
-                                }
-
-                                if (var != null) {
-                                    now = var;
-                                } else {
-                                    SIRunner.PushError(nme + " variable is not in scope.");
-                                }
-
-                                // Skip VAR's pool index and OBJECT token.
-                                ind++;
-                                ind++;
-                                break;
-                            }
-                        case SIRunner.EXPRESSION:
-                            int expno = expression[ind+1];
-                            now = run(compiled,expno,names,extravalues,variables).returnval;
-                            ind++;
-                            break;
-                        case SIRunner.CALL:
-                            Compiled c2 = new Compiled(compiled.pool,compiled.numpool,expression,compiled.expressions,compiled.block);
-                            CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables);
-                            ind = r.next;
-                            
-                            now = r.returnval;
-                            break;
-                    }
+                    CALL_Return ret = RunnerFunctions.calcExpressionVal(compiled,expression_no,ind,names,extravalues,variables);
+                    SIObject now = ret.returnval;
+                    ind = ret.next;
                     /*System.out.println(
                         "BEFORE RESULT: first=" + first +
                         ", op=" + op +
@@ -92,46 +44,9 @@ public class EXPRESSION_Runner
                     op = -1;
                 }
             }else{
-                switch(expression[ind]){
-                    case SIRunner.VALUE:
-                        Number num = compiled.numpool[expression[ind+1]];
-                        first = getNumber(num);
-                        ind++;
-                        break;
-                    case SIRunner.POOL:
-                        String pool = compiled.pool[expression[ind+1]];
-                        SIString s = new SIString();
-                        s.set(pool);
-                        first = s;
-                        ind++;
-                        break;
-                   case SIRunner.VAR:
-                        String nme = compiled.pool[expression[ind+1]];
-
-                        int nmeindex = names.indexOf(nme);
-                        if(nmeindex >= 0 && nmeindex < extravalues.size()){
-                            SIObject var = SIRunner.getVariable(extravalues.get(nmeindex));
-                            if(var != null) first = var;
-                            ind++;
-                        }else if(variables.containsKey(nme)){
-                            SIObject var = SIRunner.getVariable(variables.get(nme));
-                            if(var!=null)first =var;
-                            ind++;
-                        }else SIRunner.PushError(nme+" variable is not in scope.");
-                        ind++;
-                        break;
-                   case SIRunner.EXPRESSION:
-                       int expno = expression[ind+1];
-                       first = run(compiled,expno,names,extravalues,variables).returnval;
-                       ind++;
-                       break;
-                   case SIRunner.CALL:
-                       Compiled c2 = new Compiled(compiled.pool,compiled.numpool,expression,compiled.expressions,compiled.block);
-                       CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables);
-                       ind = r.next;
-                       first = r.returnval;
-                       break;
-                }
+                CALL_Return ret = RunnerFunctions.calcExpressionVal(compiled,expression_no,ind,names,extravalues,variables);
+                first = ret.returnval;
+                ind = ret.next;
             }
             ind++;
         }
@@ -143,12 +58,12 @@ public class EXPRESSION_Runner
             if(o1 instanceof SIString&&o2 instanceof SIString){
                 switch(op){
                     case SIRunner.EQUAL:
-                        SIInteger i = new SIInteger();
+                        SIBoolean i = new SIBoolean();
                         i.set(((SIString)o1).get().equals(((SIString)o2).get())?1:0);
                         return i;
                         
                     case SIRunner.NOT_EQUAL:
-                        SIInteger i2 = new SIInteger();
+                        SIBoolean i2 = new SIBoolean();
                         i2.set(((SIString)o1).get().equals(((SIString)o2).get())?0:1);
                         return i2;
                     case SIRunner.ADD:
@@ -159,12 +74,12 @@ public class EXPRESSION_Runner
             }else if(o1 instanceof SIString){
                 switch(op){
                     case SIRunner.EQUAL:
-                        SIInteger i = new SIInteger();
+                        SIBoolean i = new SIBoolean();
                         i.set(((SIString)o1).get().equals(o2.getString())?1:0);
                         return i;
 
                     case SIRunner.NOT_EQUAL:
-                        SIInteger i2 = new SIInteger();
+                        SIBoolean i2 = new SIBoolean();
                         i2.set(((SIString)o1).get().equals(o2.getString())?0:1);
                         return i2;
                     case SIRunner.ADD:
@@ -175,12 +90,12 @@ public class EXPRESSION_Runner
             }else if(o2 instanceof SIString){
                 switch(op){
                     case SIRunner.EQUAL:
-                        SIInteger i = new SIInteger();
+                        SIBoolean i = new SIBoolean();
                         i.set(o1.getString().equals(((SIString)o2).get())?1:0);
                         return i;
 
                     case SIRunner.NOT_EQUAL:
-                        SIInteger i2 = new SIInteger();
+                        SIBoolean i2 = new SIBoolean();
                         i2.set(o1.getString().equals(((SIString)o2).get())?0:1);
                         return i2;
                     case SIRunner.ADD:
@@ -264,7 +179,7 @@ public class EXPRESSION_Runner
                         default: result.set(n1.intValue() % n2.intValue());return result;
                     }
                 case SIRunner.EQUAL: {
-                        SIInteger result1 = new SIInteger();
+                        SIBoolean result1 = new SIBoolean();
                         boolean equal;
 
                         switch (type) {
@@ -287,7 +202,7 @@ public class EXPRESSION_Runner
                     }
 
                 case SIRunner.NOT_EQUAL: {
-                        SIInteger result2 = new SIInteger();
+                        SIBoolean result2 = new SIBoolean();
                         boolean notEqual;
 
                         switch (type) {
@@ -309,19 +224,19 @@ public class EXPRESSION_Runner
                         return result2;
                     }
                 case SIRunner.GREATER:
-                    SIInteger bo3 = new SIInteger();
+                    SIBoolean bo3 = new SIBoolean();
                     bo3.set((n1.doubleValue()>n2.doubleValue())?1:0);
                     return bo3;
                 case SIRunner.GREATER_OR_EQUAL:
-                    SIInteger bo4 = new SIInteger();
+                    SIBoolean bo4 = new SIBoolean();
                     bo4.set((n1.doubleValue()>=n2.doubleValue())?1:0);
                     return bo4;
                 case SIRunner.LESS:
-                    SIInteger bo5 = new SIInteger();
+                    SIBoolean bo5 = new SIBoolean();
                     bo5.set((n1.doubleValue()<n2.doubleValue())?1:0);
                     return bo5;
                 case SIRunner.LESS_OR_EQUAL:
-                    SIInteger bo6 = new SIInteger();
+                    SIBoolean bo6 = new SIBoolean();
                     bo6.set((n1.doubleValue()<=n2.doubleValue())?1:0);
                     return bo6;
             }

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import SayIt.basic.SIBoolean;
 
 public class SIBuiltins 
 {
@@ -198,13 +199,13 @@ public class SIBuiltins
                     int i = 0;
 
                     while (i + 1 < vals.length
-                           && vals[i] instanceof SIBaseNumber
+                           && (vals[i] instanceof SIBaseNumber||vals[i] instanceof SIBoolean)
                            && vals[i + 1] instanceof SIBlock) {
 
-                        SIBaseNumber n = (SIBaseNumber) vals[i];
+                        
                         SIBlock b = (SIBlock) vals[i + 1];
 
-                        if (n.get().doubleValue() > 0) {
+                        if ((vals[i]instanceof SIBaseNumber && ((SIBaseNumber)vals[i]).get().doubleValue()>0)||(vals[i] instanceof SIBoolean&&((SIBoolean)vals[i]).get()>0)) {
                             SIRunner.run(
                                 b.get(),new String[0],new SIObject[0],
                                 vars.keySet().toArray(new String[0]),
@@ -231,7 +232,7 @@ public class SIBuiltins
                     return null;
                 }
 
-            }, "if", "any", "...");;
+            }, "if", "any", "...");
         final List<String> s1 =Arrays.asList(new String[0]);
         final List<Integer> i1 =Arrays.asList(new Integer[0]);
         addFunction(new SIFunction.javaFunction() {
@@ -249,7 +250,7 @@ public class SIBuiltins
                     SIFullExpression condition = (SIFullExpression) vals[0];
                     SIBlock block = (SIBlock) vals[1];
                     
-                    while (((SIBaseNumber)EXPRESSION_Runner.run(condition.get(),condition.expno,s1,i1,vars).returnval).get().doubleValue() > 0) {
+                    while ((((SIBaseNumber)EXPRESSION_Runner.run(condition.get(),condition.expno,s1,i1,vars).returnval).get().doubleValue() > 0)||(((SIBoolean)EXPRESSION_Runner.run(condition.get(),condition.expno,s1,i1,vars).returnval).get() > 0)) {
                         
                         SIRunner.run(
                             block.get(),new String[0],new SIObject[0],
@@ -334,6 +335,36 @@ public class SIBuiltins
                 
                 
             },"createFunction","fn","...");
+        addFunction(new SIFunction.javaFunction(){
+
+                @Override
+                public SIObject run(HashMap<String, Integer> vars, SIObject[] vals) {
+                    if(vals.length == 1){
+                        SIString s = new SIString();
+                        s.set(vals[0].name);
+                        return s;
+                        
+                       
+                    }
+                    return null;
+                }
+            }, "getType", "any", "a");
+        addFunction(new SIFunction.javaFunction(){
+
+                @Override
+                public SIObject run(HashMap<String, Integer> vars, SIObject[] vals) {
+                    SIBoolean b = new SIBoolean();
+                    b.set(0);
+                    if(vals.length == 1){
+                        if(vals[0] instanceof SIBaseNumber){
+                            b.set(((SIBaseNumber)vals[0]).get().intValue());
+                        }else if(vals[0] instanceof SIString){
+                            b.set(((SIString)vals[0]).get().isEmpty()?0:1);
+                        }
+                    }
+                    return b;
+                }
+            }, "bool", "boolean", "...");
     }
 
     

@@ -34,6 +34,11 @@ public class CALL_Runner
             int val = -1;
             
             while(i<compcode.length&&(compcode[i]!=SIRunner.ARGS_END||val!=-1)){
+                /*
+                 CALL_Return cr = RunnerFunctions.calcValue(compiled,i,names,extravalues,variables);
+                 i =cr.next;
+                 if(cr.returnval!=null)vals.add(cr.returnval);
+                */
                 if(val==-1){
                     switch(compcode[i]){
                         case SIRunner.POOL:
@@ -50,58 +55,18 @@ public class CALL_Runner
                     switch(val){
                         
                         case SIRunner.POOL:
-                            SIString s = new SIString();
-                            s.set(compiled.pool[compcode[i]]);
-                            //System.out.println(s.get());
-                            vals.add(s);
+                            
+                            vals.add(RunnerFunctions.getPool(compiled,i));
                             break;
                         case SIRunner.VALUE:
-                            Number num = compiled.numpool[compcode[i]];
-                            if(num instanceof Integer){
-                                SIInteger n = new SIInteger();
-                                n.set(num);
-                                vals.add(n);
-                            }else if(num instanceof Long){
-                                SILong n = new SILong();
-                                n.set(num);
-                                vals.add(n);
-                            }else if(num instanceof Float){
-                                SIFloat n = new SIFloat();
-                                n.set(num);
-                                vals.add(n);
-                            }else{
-                                SIDouble n = new SIDouble();
-                                n.set(num);
-                                vals.add(n);
-                            }
                             
+                            vals.add(RunnerFunctions.getValue(compiled,i));
                             break;
                         case SIRunner.VAR:
-                            String nme = compiled.pool[compcode[i]];
+                            CALL_Return cr = RunnerFunctions.getVariable(compiled,i,names,extravalues,variables);
                             
-                            if (names.contains(nme)) {
-                                int nmeindex = names.indexOf(nme);
-
-                                if (nmeindex < extravalues.size()) {
-                                    SIObject var = SIRunner.getVariable(extravalues.get(nmeindex));
-
-                                    if (var != null) {
-                                        vals.add(var);
-                                    } else {
-                                        SIRunner.PushError(nme + " variable storage is missing.");
-                                    }
-                                }
-                            } else if (variables.containsKey(nme)) {
-                                SIObject var = SIRunner.getVariable(variables.get(nme));
-
-                                if (var != null) {
-                                    vals.add(var);
-                                } else {
-                                    SIRunner.PushError(nme + " variable storage is missing.");
-                                }
-                            } else {
-                                SIRunner.PushError(nme + " variable is not in scope.");
-                            }
+                            vals.add(cr.returnval);
+                            i = cr.next;
                         break;
                         case SIRunner.CALL:
                             
@@ -126,10 +91,8 @@ public class CALL_Runner
                             
                             break;
                         case SIRunner.BLOCK:
-                            int blockno = compcode[i];
-                            SIBlock b = new SIBlock();
-                            b.set(compiled.block[blockno]);
-                            vals.add(b);
+                            
+                            vals.add(RunnerFunctions.getBlock(compiled,i));
                             break;
                     }
                     val = -1;

@@ -20,7 +20,7 @@ public class SIFunction extends SIObject {
         //setting arg name and type
         if (val.length % 2 != 0) {
             throw new IllegalArgumentException(
-                "Expected pairs of argument name and type"
+                "Expected pairs of argument name and type,but got\n"+Arrays.toString(val)
             );
         }
         if (val.length == 2  && val[1]instanceof String && ((String)val[1]).equals("...")) {

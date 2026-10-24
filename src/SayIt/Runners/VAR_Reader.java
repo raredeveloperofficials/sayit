@@ -24,6 +24,8 @@ public class VAR_Reader
                     ind+=2;
                     if(!variables.containsKey(name)){
                     CALL_Return c = getVariable(comp,ind,names,extravals,variables);
+                    
+                   
                     variables.put(name,SIRunner.addVariable(type,c.returnval));
                     return c.next;
                     }else{

@@ -1,0 +1,111 @@
+Say It Custom License (SICL)
+
+Version 1.0
+
+Copyright © 2026 S Siva Surya. All rights reserved.
+
+This license governs the use, development, modification, and distribution of the Say It programming language and its associated source code, tools, libraries, and documentation (collectively, the "Project").
+
+By using, copying, modifying, or distributing the Project, you agree to the following terms.
+
+1. Free Development and Use
+
+You are permitted to:
+
+- Use Say It for personal, educational, research, and professional purposes.
+- Develop applications, games, tools, libraries, and other software using Say It.
+- Study, copy, and modify the Project's source code.
+- Create extensions, improvements, integrations, and derivative works.
+- Use Say It without paying a license fee.
+
+These permissions are subject to the conditions of this license.
+
+2. Commercial Use
+
+Commercial use of Say It is permitted free of charge.
+
+You may use Say It in commercial projects, products, services, and business activities, provided that you:
+
+1. Clearly acknowledge the use of Say It.
+2. Include a link to the official Say It GitHub repository in an appropriate location, such as the product's documentation, credits, About page, or accompanying notices.
+3. Do not misrepresent Say It as your own independently created project.
+4. Comply with all other terms of this license.
+
+The official repository is:
+
+[INSERT OFFICIAL SAY IT GITHUB REPOSITORY URL]
+
+No royalty or payment is required solely for commercial use under this license.
+
+3. Ownership and Attribution
+
+The original Say It Project, including its original source code, name, branding, documentation, and other original materials, remains the property of its respective copyright holder.
+
+You must not:
+
+- Claim that you created or own the original Say It Project.
+- Present the original Project as your own independently developed programming language.
+- Remove or falsify existing copyright notices or license notices.
+- Misrepresent your modifications as the original author's work.
+- Register or use the Say It name or branding in a way that falsely suggests official ownership, endorsement, or affiliation.
+
+You may acknowledge your own modifications and claim authorship of your original contributions. However, modifying or redistributing the Project does not transfer ownership of the original Project to you.
+
+4. Modifications and Improvements
+
+You are permitted to modify, improve, and extend Say It.
+
+When contributing improvements to the official GitHub repository:
+
+1. Create a separate branch for your work, or submit your changes through a fork.
+2. Submit your proposed improvements through a pull request targeting the appropriate branch.
+3. Do not directly push changes to the official "main" branch.
+4. Keep proposed changes isolated from the official "main" branch until they are reviewed and accepted by the project maintainer.
+
+The "main" branch is reserved for changes accepted and integrated by the project maintainer.
+
+You may maintain your own fork or separate branch containing modifications, provided you follow this license when using or distributing the Project.
+
+Submitting a contribution does not guarantee that it will be accepted or merged.
+
+5. Redistribution
+
+You may redistribute original or modified copies of the Project, provided that you:
+
+- Include this license with the redistributed copy.
+- Preserve applicable copyright and attribution notices.
+- Clearly identify significant modifications where reasonably appropriate.
+- Include a link to the official Say It GitHub repository.
+- Do not claim ownership of the original Project.
+
+You must not distribute the Project in a manner that falsely implies that your copy is the official release.
+
+6. No Warranty
+
+The Project is provided "AS IS", without warranties of any kind, express or implied, to the maximum extent permitted by applicable law.
+
+The copyright holder is not liable for claims, damages, or other liabilities arising from the use, modification, distribution, or inability to use the Project, except where such exclusion or limitation is prohibited by applicable law.
+
+7. Termination
+
+Any rights granted under this license terminate automatically if you materially violate its terms.
+
+Upon termination, you must stop exercising the permissions granted by this license unless and until your rights are reinstated by the copyright holder or applicable law provides otherwise.
+
+Termination does not eliminate obligations or liabilities that arose before termination.
+
+8. Changes to This License
+
+The copyright holder may publish new versions of this license for future releases of Say It.
+
+A license version applicable to an existing release continues to govern that release unless the copyright holder expressly provides otherwise and has the legal right to do so.
+
+9. Governing Law
+
+This license is subject to applicable law. Any governing law or jurisdiction provision must be interpreted consistently with mandatory legal protections and applicable legal requirements.
+
+10. Acceptance
+
+By using, copying, modifying, or distributing Say It under this license, you acknowledge that you have read and agree to its terms.
+
+End of Say It Custom License (SICL) Version 1.0.

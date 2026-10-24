@@ -47,11 +47,21 @@ Say It aims to make programming more approachable without sacrificing expressive
 
 📦 Getting Started
 
-1. Clone or download this repository.
-2. Set up the required Java development environment.
-3. Follow the build and execution instructions provided in the source code.
+Say It is currently under development as a Java project.
 
-Detailed setup instructions will be added as the project develops.
+Requirements
+
+- Java Development Kit (JDK)
+- A Java IDE or text editor
+
+Running the Project
+
+1. Clone or download this repository.
+2. Open the project in your Java development environment.
+3. Locate "Main.java".
+4. Run "Main.java" to start the program or execute the available tests.
+
+Note: Say It is still evolving. The project structure, syntax, and features may change as development continues.
 
 🤝 Contributing
 

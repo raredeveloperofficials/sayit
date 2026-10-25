@@ -34,19 +34,19 @@ public class SIFunction extends SIObject {
             args.put((String)val[i * 2+1], (String)val[(i * 2)]);
         }
     }
-    public SIObject call(HashMap<String,Integer> vars,SIObject... vals) {
+    public SIObject call(HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> vars,SIObject... vals) {
         if (!infinite) {
             if (args.size() != vals.length)throw new IllegalArgumentException("function arguments doesn't match the expectation");
         }
         if (java == null)
-            return SIRunner.run(c,args.keySet().toArray(new String[0]),vals, vars.keySet().toArray(new String[0]),vars.values().toArray(new Integer[0]));
+            return SIRunner.run(localfun,c,args.keySet().toArray(new String[0]),vals, vars.keySet().toArray(new String[0]),vars.values().toArray(new Integer[0]));
         else
-            return java.run(vars,vals);
+            return java.run(localfun,vars,vals);
     }
     public void javaExecute(javaFunction java) {
         this.java = java;
     }
     public static interface javaFunction {
-        public SIObject run(HashMap<String,Integer> vars,SIObject... vals);
+        public SIObject run(HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> vars,SIObject... vals);
     }
 }

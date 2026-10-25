@@ -1,21 +1,22 @@
 package SayIt.Runners;
 import SayIt.SIRunner;
 import SayIt.basic.SIBaseNumber;
+import SayIt.basic.SIBoolean;
 import SayIt.basic.SIDouble;
 import SayIt.basic.SIFloat;
 import SayIt.basic.SIInteger;
 import SayIt.basic.SILong;
 import SayIt.basic.SIObject;
+import SayIt.basic.SIOverloadFunction;
 import SayIt.basic.SIString;
 import SayIt.main.Compiled;
 import java.util.HashMap;
 import java.util.List;
-import SayIt.basic.SIBoolean;
 
 public class EXPRESSION_Runner
 {
     
-    public static EXPRESSION_Result run(Compiled compiled,int expression_no,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
+    public static EXPRESSION_Result run(Compiled compiled,int expression_no,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         Integer[] expression = compiled.expressions[expression_no];
         
         int ind = 0;
@@ -28,7 +29,7 @@ public class EXPRESSION_Runner
                 if(op == -1){
                     op = expression[ind];
                 }else{
-                    CALL_Return ret = RunnerFunctions.calcExpressionVal(compiled,expression_no,ind,names,extravalues,variables);
+                    CALL_Return ret = RunnerFunctions.calcExpressionVal(compiled,expression_no,ind,names,extravalues,variables,localfun);
                     SIObject now = ret.returnval;
                     ind = ret.next;
                     /*System.out.println(
@@ -44,7 +45,7 @@ public class EXPRESSION_Runner
                     op = -1;
                 }
             }else{
-                CALL_Return ret = RunnerFunctions.calcExpressionVal(compiled,expression_no,ind,names,extravalues,variables);
+                CALL_Return ret = RunnerFunctions.calcExpressionVal(compiled,expression_no,ind,names,extravalues,variables,localfun);
                 first = ret.returnval;
                 ind = ret.next;
             }

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import SayIt.basic.SINull;
+import SayIt.basic.SIOverloadFunction;
 
 public class SIRunner
 {
@@ -32,6 +33,12 @@ public class SIRunner
            this .type = type;
        }
        
+    }
+    public static void addFunction(HashMap<String,SIOverloadFunction> local,SIFunction fun){
+        if(local==null||fun == null)return;
+        SIOverloadFunction f = local.getOrDefault(fun.name,new SIOverloadFunction());
+        f.add(fun);
+        local.put(fun.name,f);
     }
     public static int addVariable(String type,SIObject obj){
         if(variable_removed_index.empty()){
@@ -87,11 +94,12 @@ public class SIRunner
     
     
     
-    public static SIObject run(Compiled compiled,String[] namet,SIObject[] myvals,String[] names,Integer... extravalues){
+    public static SIObject run(HashMap<String,SIOverloadFunction> prevfunc,Compiled compiled,String[] namet,SIObject[] myvals,String[] names,Integer... extravalues){
         int i = 0;
         List<String> name = new ArrayList<String>(Arrays.asList(names));
 
-       
+       HashMap<String,SIOverloadFunction> localfun = new HashMap<>();
+       localfun.putAll(prevfunc);
         List<Integer> values = new ArrayList<Integer>(Arrays.asList(extravalues));
         for(int in = 0; in<namet.length;in++){
            // System.out.println("heheheh");
@@ -105,13 +113,13 @@ public class SIRunner
         while(i<compiled.code.length){
             if(code[i]==CALL){
                 
-                CALL_Return cr = CALL_Runner.run(compiled,i,name,values,variables);
+                CALL_Return cr = CALL_Runner.run(compiled,i,name,values,variables,localfun);
                 rtrn = cr.returnval;
                 
                 i = cr.next+1;
             }else
             if(code[i] == VAR){
-                i = VAR_Reader.read(compiled,i,name,values,variables)+1;
+                i = VAR_Reader.read(compiled,i,name,values,variables,localfun)+1;
             }
         }
         return rtrn;

@@ -1,24 +1,16 @@
 package SayIt.Runners;
 import SayIt.SIRunner;
-import SayIt.basic.SIDouble;
-import SayIt.basic.SIFloat;
-import SayIt.basic.SIInteger;
-import SayIt.basic.SILong;
+import SayIt.basic.SIFullExpression;
 import SayIt.basic.SIObject;
-import SayIt.basic.SIString;
+import SayIt.basic.SIOverloadFunction;
 import SayIt.main.Compiled;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import SayIt.basic.SIBlock;
-import SayIt.basic.SIExpression;
-import SayIt.basic.SIFullExpression;
-import SayIt.basic.SIFunction;
 
 public class CALL_Runner
 {
-    public static CALL_Return run(Compiled compiled,int i,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
+    public static CALL_Return run(Compiled compiled,int i,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         Integer[] compcode = compiled.code;
         
         SIObject rtrn = null;
@@ -70,7 +62,7 @@ public class CALL_Runner
                         break;
                         case SIRunner.CALL:
                             
-                            CALL_Return rt =run(compiled,i-1,names,extravalues,variables);
+                            CALL_Return rt =run(compiled,i-1,names,extravalues,variables,localfun);
                             
                             i = rt.next;
                             //if(rt.returnval!= null)System.out.println(rt.returnval.get());
@@ -80,7 +72,7 @@ public class CALL_Runner
                             //System.out.println("Evaluating expression index: " + compcode[i]);
                             //System.out.println(Arrays.toString(compiled.expressions[compcode[i]]));
                            // System.out.println(Arrays.toString(compiled.expressions[compcode[i]]));
-                            EXPRESSION_Result exres = EXPRESSION_Runner.run(compiled,compcode[i],names,extravalues,variables);
+                            EXPRESSION_Result exres = EXPRESSION_Runner.run(compiled,compcode[i],names,extravalues,variables,localfun);
                             if(name.equals("while")){
                                 SIFullExpression expno = new SIFullExpression();
                                 expno.set(compiled);
@@ -103,10 +95,31 @@ public class CALL_Runner
             for(SIObject o:vals){
                 SIRunner.addVariable(o.name,o);
             }
-            rtrn = SIRunner.functions.get(name).call(new HashMap<String,Integer>(variables),vals.toArray(new SIObject[0]));
-            
+//            if(localfun.containsKey(name)){
+//                rtrn = localfun.get(name).call(new HashMap<String,SIOverloadFunction>(localfun),new HashMap<String,Integer>(variables),vals.toArray(new SIObject[0]));
+//            }else
+//            if(SIRunner.functions.containsKey(name)){
+//                rtrn = SIRunner.functions.get(name).call(new HashMap<String,SIOverloadFunction>(localfun),new HashMap<String,Integer>(variables),vals.toArray(new SIObject[0]));
+//            }
+            rtrn = callFunction(name,localfun,variables,vals.toArray(new SIObject[0]));
         }
         //if(rtrn !=null)//System.out.println(rtrn.get());
         return new CALL_Return(i,rtrn);
+    }
+    public static SIObject callFunction(String name,HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> variables ,SIObject... names){
+        SIObject rtrn = null;
+        HashMap<String,SIOverloadFunction> loc = null;
+        if(name.equals("createFunction")){
+            loc = localfun;
+        }else{
+            loc = new HashMap<String,SIOverloadFunction>();
+        }
+        if(localfun.containsKey(name)){
+            rtrn = localfun.get(name).call(loc,new HashMap<String,Integer>(variables),names);
+        }else
+        if(SIRunner.functions.containsKey(name)){
+            rtrn = SIRunner.functions.get(name).call(loc,new HashMap<String,Integer>(variables),names);
+        }
+        return rtrn;
     }
 }

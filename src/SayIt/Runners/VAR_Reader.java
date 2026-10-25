@@ -3,6 +3,7 @@ import SayIt.SIRunner;
 import SayIt.basic.SIBaseNumber;
 import SayIt.basic.SINull;
 import SayIt.basic.SIObject;
+import SayIt.basic.SIOverloadFunction;
 import SayIt.basic.SIString;
 import SayIt.main.Compiled;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class VAR_Reader
 {
-    public static int read(Compiled comp,int ind,List<String> names,List<Integer> extravals,HashMap<String,Integer> variables){
+    public static int read(Compiled comp,int ind,List<String> names,List<Integer> extravals,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         Integer[] code = comp.code;
         if(code[ind] != SIRunner.VAR)return ind;
         ind++;
@@ -23,7 +24,7 @@ public class VAR_Reader
                 if(code[ind+1]==SIRunner.ASSIGN){
                     ind+=2;
                     if(!variables.containsKey(name)){
-                    CALL_Return c = getVariable(comp,ind,names,extravals,variables);
+                    CALL_Return c = getVariable(comp,ind,names,extravals,variables,localfun);
                     
                    
                     variables.put(name,SIRunner.addVariable(type,c.returnval));
@@ -55,7 +56,7 @@ public class VAR_Reader
                 }
                 int assop = code[ind];
                 ind++;
-                CALL_Return c = getVariable(comp,ind,names,extravals,variables);
+                CALL_Return c = getVariable(comp,ind,names,extravals,variables,localfun);
                 SIObject rhs = c.returnval;
                 ind =c.next;
                 if(assop==SIRunner.ASSIGN){
@@ -75,7 +76,7 @@ public class VAR_Reader
         }
         return ind;
     }
-    public static CALL_Return getVariable(Compiled c,int ind,List<String> names,List<Integer> extravalues,HashMap<String,Integer> variables){
+    public static CALL_Return getVariable(Compiled c,int ind,List<String> names,List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         switch(c.code[ind]){
             case SIRunner.POOL:
                 SIString s = new SIString();
@@ -110,12 +111,12 @@ public class VAR_Reader
                 return null;
             case SIRunner.EXPRESSION:
                 int expno = c.code[ind+1];
-                return new CALL_Return(ind+1, EXPRESSION_Runner.run(c,expno,names,extravalues,variables).returnval);
+                return new CALL_Return(ind+1, EXPRESSION_Runner.run(c,expno,names,extravalues,variables,localfun).returnval);
                 
                 
             case SIRunner.CALL:
                 Compiled c2 = new Compiled(c.pool,c.numpool,c.code,c.expressions,c.block);
-                CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables);
+                CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables,localfun);
                 ind = r.next;
 
                 return new CALL_Return(ind, r.returnval);

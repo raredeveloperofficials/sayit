@@ -1,12 +1,13 @@
 package SayIt.Runners;
 import SayIt.SIRunner;
 import SayIt.basic.SIBaseNumber;
+import SayIt.basic.SIBlock;
 import SayIt.basic.SIObject;
+import SayIt.basic.SIOverloadFunction;
 import SayIt.basic.SIString;
 import SayIt.main.Compiled;
 import java.util.HashMap;
 import java.util.List;
-import SayIt.basic.SIBlock;
 
 public class RunnerFunctions
 {
@@ -18,6 +19,7 @@ public class RunnerFunctions
     public static SIBlock getBlock(Compiled c,int ind){
         int blockno = c.code[ind];
         SIBlock b = new SIBlock();
+        
         b.set(c.block[blockno]);
         return b;
     }
@@ -27,13 +29,13 @@ public class RunnerFunctions
         n = EXPRESSION_Runner. getNumber(num);
         return n;
     }
-    public static SIObject getExpressionResult(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
-        SIObject o = EXPRESSION_Runner.run(c,c.code[ind],names,extravalues,variables).returnval;
+    public static SIObject getExpressionResult(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
+        SIObject o = EXPRESSION_Runner.run(c,c.code[ind],names,extravalues,variables,localfun).returnval;
         return o;
     }
-    public static CALL_Return getFunctionCall(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
+    public static CALL_Return getFunctionCall(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         Compiled c2 = new Compiled(c.pool,c.numpool,c.code,c.expressions,c.block);
-        CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables);
+        CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables,localfun);
         return new CALL_Return(r.next,r.returnval);
     }
     public static CALL_Return getVariable(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
@@ -58,7 +60,7 @@ public class RunnerFunctions
         ind++;
         return new CALL_Return(ind,var);
     }
-    public static CALL_Return calcValue(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
+    public static CALL_Return calcValue(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         SIObject val = null;
         switch(c.code[ind]){
             case SIRunner.VALUE:
@@ -81,11 +83,11 @@ public class RunnerFunctions
                 break;
             case SIRunner.EXPRESSION:
                 ind++;
-                val = getExpressionResult(c,ind,names,extravalues,variables);
+                val = getExpressionResult(c,ind,names,extravalues,variables,localfun);
                 break;
             case SIRunner.CALL:
                 
-                CALL_Return cal= getFunctionCall(c,ind,names,extravalues,variables);
+                CALL_Return cal= getFunctionCall(c,ind,names,extravalues,variables,localfun);
                 ind = cal.next;
                 val = cal.returnval;
                 break;
@@ -95,8 +97,8 @@ public class RunnerFunctions
         }
         return new CALL_Return(ind,val);
     }
-    public static CALL_Return calcExpressionVal(Compiled c,int exp_no,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables){
+    public static CALL_Return calcExpressionVal(Compiled c,int exp_no,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
         Compiled c2 = new Compiled(c.pool,c.numpool,c.expressions[exp_no],c.expressions,c.block);
-        return calcValue(c2,ind,names,extravalues,variables);
+        return calcValue(c2,ind,names,extravalues,variables,localfun);
     }
 }

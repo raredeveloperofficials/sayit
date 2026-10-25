@@ -1,6 +1,6 @@
 Say It
 
-A programming language that doesn't teach you types.
+A programming language that does teach you types.But don't force too much.
 
 Say It is a programming language designed to make coding easier to write and understand, combining Python-like simplicity with Java/C++-inspired programming concepts.
 

@@ -103,7 +103,7 @@ Creator and developer of Say It.
 8.  createFunction(block "name" "returntype" "argtype"+"argname"...) -> creates a function at runtime
 9.  input(string) -> show the string and wait for input
 10.  toInt(string) -> string to int
-11.  toLonh(string) -> string to long
+11.  toLong(string) -> string to long
 12.  toFloat(string) -> string to float
 13.  toDouble(string) -> string to double
 14.  bool() -> initialize a Boolean var

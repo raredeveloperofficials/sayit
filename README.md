@@ -92,6 +92,23 @@ S Siva Surya
 
 Creator and developer of Say It.
 
+📝 First Update Full Features:
+1. show(...) -> print function
+2. showln(...) -> prints everything in new line
+3. add(a,b) -> add a and b -> return result number
+4. sub(a,b) -> subtracts a and b -> return result number
+5. if(condition+block... block) -> check condition and if true execute block , else if there is another condition repeat or else execute last block if present.
+6.  while(condition block) -> it executes block till condition is true
+7.  for("loop_var_name" n block) -> execute block n times storing 0-(n-1) in loop_var_name
+8.  createFunction(block "name" "returntype" "argtype"+"argname"...) -> creates a function at runtime
+9.  input(string) -> show the string and wait for input
+10.  toInt(string) -> string to int
+11.  toLonh(string) -> string to long
+12.  toFloat(string) -> string to float
+13.  toDouble(string) -> string to double
+14.  bool() -> initialize a Boolean var
+15.  bool(string) -> true if non empty
+16.  bool(number) -> true if greater than 0
 ---
 
 Say It — Write code your way.

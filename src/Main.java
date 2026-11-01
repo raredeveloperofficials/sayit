@@ -13,15 +13,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import SayIt.basic.SIOverloadFunction;
+import java.util.Arrays;
 public class Main {
 
 
     private static String version = "version:alpha 0.2v \n[single dev version]";
     public static void main(String[] args){
+        
         main2(new String[]{"version"});
         main2(new String[]{"compile","/storage/emulated/0/SayIt/main.si","/storage/emulated/0/SayIt/main.sic"});
         main2(new String[]{"run","/storage/emulated/0/SayIt/main.sic"});
     }
+    
+    
+    
+    
+    
     public static void main2(String[] args) {
         if (args.length == 0) {
             printUsage();
@@ -118,6 +125,7 @@ public class Main {
                 compiled = Compiled.readFromFile(
                     compiledFile.getAbsolutePath()
                 );
+                System.out.println(Arrays.toString(compiled.code));
             } catch (IOException e) {
                 System.err.println(
                     "Failed to load compiled file: " + e.getMessage()
@@ -132,10 +140,10 @@ public class Main {
 
             SIBuiltins.init();
 
-            SIString titan = new SIString();
-            titan.set("titan11200");
+            SIString main = new SIString();
+            main.set(compiled.classname);
 
-            int titanindex = SIRunner.addVariable("string", titan);
+            int mainindex = SIRunner.addVariable("string", main);
 
             long start = System.nanoTime();
 
@@ -143,8 +151,8 @@ public class Main {
                 compiled,
                 new String[0],
                 new SIObject[0],
-                new String[]{"titan"},
-                new Integer[]{titanindex});
+                new String[]{"Main_Class"},
+                new Integer[]{mainindex});
 
             double delay =
                 (System.nanoTime() - start) / 1_000_000.0;

@@ -1,114 +1,91 @@
 Say It
 
-A programming language that does teach you types.But don't force too much.
+A programming language that does teach you types, but doesn't force too much.
 
 Say It is a programming language designed to make coding easier to write and understand, combining Python-like simplicity with Java/C++-inspired programming concepts.
 
 ---
 
-✨ Features
+⚠️ Project Development Notice
 
-- Simple Syntax — No semicolons required.
-- Variables — Declare variables using "as".
-- Expressions — Perform mathematical operations and combine values.
-- Built-in Functions — Includes "show()", "showln()", "input()", "toInt()", and more.
-- Nested Function Calls — Execute nested expressions and function calls.
-- Conditional Statements — Supports "if" statements.
-- Loops — Supports "while" and "for" loops.
-- Java-Based Runtime — Built using Java.
+The original Say It compiler and runner are now deprecated.
 
-🚀 Example
+The existing Java-based compiler and runner remain available and usable, but are no longer actively developed by the original developer.
 
-name as string = input("Enter your name: ")
-show("Hello, " name "\n")
+Development is now planned around three components:
 
-🧮 Calculator Example
+- Advanced Compiler — A redesigned compiler with a cleaner architecture and improved compilation system.
+- Advanced Runner — A completely redesigned runtime designed to avoid the complexity and limitations of the legacy implementation.
+- C++ Conversion Backend — A converter that translates Say It source files (".si") into C++ source (".cpp") and header (".hpp") files.
 
-A as int = toInt(input("First number: "))
-B as int = toInt(input("Second number: "))
+All three are planned as part of Say It's next development phase.
 
-show("Addition: " (A + B) "\n")
-show("Subtraction: " (A - B) "\n")
-show("Multiplication: " (A * B) "\n")
+🎯 Shifting Purpose
 
-🎯 Philosophy
+Native Speed. Higher Syntax Power. Cleaner Architecture.
 
-Say It aims to make programming more approachable without sacrificing expressive power.
+Say It is evolving beyond its original Java-based implementation.
 
-- Less syntax overhead.
-- Readable code.
-- Flexible expressions.
-- Familiar programming concepts with a different approach.
+The next development phase aims to provide two ways to process Say It programs:
+
+1. Advanced Compiler and Runner
+
+A completely redesigned compilation and execution system.
+
+- Clean compiler architecture.
+- Simplified bytecode representation.
+- Redesigned runtime without carrying forward unnecessary complexity from the legacy implementation.
+- Expanded support for functions, classes, inheritance, and other programming constructs.
+
+2. C++ Conversion Backend
+
+A separate compilation approach that converts Say It source files into C++ source and header files.
+
+- Native Speed — Generated C++ can be compiled into native machine code.
+- Higher Syntax Power — Expand Say It's expressive capabilities through classes, inheritance, and advanced programming constructs.
+- Optimized Code Generation — Generate C++ code that can benefit from established C++ compiler optimizations.
+
+The goal is to combine Say It's approachable syntax with both a redesigned native execution architecture and the optimization capabilities of established C++ toolchains.
+
+---
 
 🛠️ Built With
 
-- Java — Language implementation and runtime.
-- Custom Compiler and Runtime — For parsing, compiling, and executing Say It programs.
+- Java — Original language implementation.
+- Legacy Compiler and Runner — Existing Java-based bytecode system; deprecated but still available.
+- Advanced Compiler — New compiler architecture planned.
+- Advanced Runner — New runtime architecture planned.
+- C++ — Target language for the conversion backend.
+- "sic" Converter — Tool under development for converting ".si" files into ".cpp" and ".hpp" files.
+
+---
 
 📦 Getting Started
 
-Say It is currently under development as a Java project.
+Say It is evolving from its original Java-based implementation toward a redesigned compiler, runner, and C++ conversion backend.
 
-Requirements
+Legacy Implementation
 
-- Java Development Kit (JDK)
-- A Java IDE or text editor
+The existing Java implementation remains available for users who want to run Say It through the original compiler and runner.
 
-Running the Project
+Advanced Compiler and Runner
 
-1. Clone or download this repository.
-2. Open the project in your Java development environment.
-3. Locate "Main.java".
-4. Run "Main.java" to start the program or execute the available tests.
+The new compiler and runner are planned as redesigned replacements for the legacy architecture. Their implementation and supported features are under development.
 
-Note: Say It is still evolving. The project structure, syntax, and features may change as development continues.
+New C++ Conversion Backend
 
-🤝 Contributing
+The new backend is intended to convert Say It source files into C++ files.
 
-Contributions are welcome under the project's license.
+Planned workflow:
 
-1. Fork this repository.
-2. Create a separate branch for your changes.
-3. Implement and test your improvements.
-4. Submit a Pull Request for review.
-5. Do not push directly to the official "main" branch.
+sic path src "src"
+sic path header "include"
+sic convert main.si
 
-All contributions are subject to review and acceptance.
+The generated C++ files will then be compiled using a suitable C++ toolchain.
 
-📜 License
+The advanced compiler, advanced runner, and C++ converter are all part of the planned development direction. Their architectures and supported features may evolve during development.
 
-Say It is distributed under the Say It Custom License (SICL).
-
-- Free to develop and use.
-- Commercial use is permitted under the license terms.
-- Commercial projects must link to the official Say It GitHub repository.
-- Claiming ownership of the original Say It project is prohibited.
-
-See the ""LICENSE"" (LICENSE) file for the complete terms.
-
-👨‍💻 Author
-
-S Siva Surya
-
-Creator and developer of Say It.
-
-📝 First Update Full Features:
-1. show(...) -> print function
-2. showln(...) -> prints everything in new line
-3. add(a,b) -> add a and b -> return result number
-4. sub(a,b) -> subtracts a and b -> return result number
-5. if(condition+block... block) -> check condition and if true execute block , else if there is another condition repeat or else execute last block if present.
-6.  while(condition block) -> it executes block till condition is true
-7.  for("loop_var_name" n block) -> execute block n times storing 0-(n-1) in loop_var_name
-8.  createFunction(block "name" "returntype" "argtype"+"argname"...) -> creates a function at runtime
-9.  input(string) -> show the string and wait for input
-10.  toInt(string) -> string to int
-11.  toLong(string) -> string to long
-12.  toFloat(string) -> string to float
-13.  toDouble(string) -> string to double
-14.  bool() -> initialize a Boolean var
-15.  bool(string) -> true if non empty
-16.  bool(number) -> true if greater than 0
 ---
 
-Say It — Write code your way.
+The existing Features, Examples, Philosophy, Contributing, License, Author, and First Update sections can remain as they are.

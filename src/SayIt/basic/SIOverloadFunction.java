@@ -7,7 +7,7 @@ import SayIt.SIRunner;
 public class SIOverloadFunction 
 {
     private ArrayList<SIFunction> fun = new ArrayList<>();
-    public SIObject call(HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> vars,SIObject... vals){
+    public SIObject call(String classname,boolean isstatic,HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> vars,SIObject... vals){
         SIObject val = null;
         boolean b = false;
         String name = "";
@@ -15,7 +15,7 @@ public class SIOverloadFunction
             if(func.get()==vals.length){
                 name = func.name;
                 b = true;
-                val = func.call(localfun,vars,vals);
+                val = func.call(classname,isstatic,localfun,vars,vals);
             }
         }
         if(!b)SIRunner.PushError("No overloads that support "+vals.length+" parameter."+((name.isEmpty())?"":"Function Name \""+name+"\""));

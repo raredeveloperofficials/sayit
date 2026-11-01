@@ -25,27 +25,32 @@ public class VAR_Reader
                     ind+=2;
                     if(!variables.containsKey(name)){
                     CALL_Return c = getVariable(comp,ind,names,extravals,variables,localfun);
-                    
+                        //System.out.println(code[ind+1]);
                    
-                    variables.put(name,SIRunner.addVariable(type,c.returnval));
-                    return c.next;
+                        if(c!=null){variables.put(name,SIRunner.addVariable(type,c.returnval));ind = c.next; ind+=2;
+                    return ind;}
+                    ind+=2;
+                    System.out.println(code[ind+1]); // visibility static_or_not
+                    return ind;
                     }else{
                         
                         SIRunner.PushError("cant declare variable that alredy exist("+name+")");
-                        
-                        return ind+1;
+                        System.out.println(code[ind+1]);
+                        return ind+3;
                     }
                 }else{
-                    if(!variables.containsKey(name)){
+                    if(!variables.containsKey(name)){ 
                     variables.put(name,SIRunner.addVariable(type,new SINull()));
+                        ind+=2;   //visibility static_or_not
                     return ind;
                     }
                     else{
                         SIRunner.PushError("cant declare variable that alredy exist("+name+")");
                         
-                        return ind;
+                        return ind+2;
                     }
                 }
+                
             case SIRunner.OBJECT:
                 ind++;
                 int lhs = -1;
@@ -115,7 +120,7 @@ public class VAR_Reader
                 
                 
             case SIRunner.CALL:
-                Compiled c2 = new Compiled(c.pool,c.numpool,c.code,c.expressions,c.block);
+                Compiled c2 = new Compiled(c.pool,c.numpool,c.code,c.expressions,c.block,c.classname,c.extendedclass);
                 CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables,localfun);
                 ind = r.next;
 

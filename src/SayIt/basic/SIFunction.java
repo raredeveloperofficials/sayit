@@ -9,6 +9,17 @@ public class SIFunction extends SIObject {
     private javaFunction java;
     private boolean infinite;
     public String name="",rtrn="";
+    public boolean isStatic = false;
+    public String classname = "";
+    public VisibilityMode visibility = VisibilityMode.PUBLIC;
+    public enum VisibilityMode{
+        PUBLIC(SIRunner.PUBLIC),PRIVATE(SIRunner.PRIVATE),PROTECTED(SIRunner.PROTECTED);
+        public final int i;
+        public VisibilityMode(int i){
+            this.i = i;
+        }
+        
+    }
     public Compiled c;
     @Override
     public Integer get() {
@@ -34,7 +45,7 @@ public class SIFunction extends SIObject {
             args.put((String)val[i * 2+1], (String)val[(i * 2)]);
         }
     }
-    public SIObject call(HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> vars,SIObject... vals) {
+    public SIObject call(String classn,boolean isstatic,HashMap<String,SIOverloadFunction> localfun,HashMap<String,Integer> vars,SIObject... vals) {
         if (!infinite) {
             if (args.size() != vals.length)throw new IllegalArgumentException("function arguments doesn't match the expectation");
         }

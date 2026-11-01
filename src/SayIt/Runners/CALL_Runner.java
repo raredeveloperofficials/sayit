@@ -115,10 +115,10 @@ public class CALL_Runner
             loc = new HashMap<String,SIOverloadFunction>();
         }
         if(localfun.containsKey(name)){
-            rtrn = localfun.get(name).call(loc,new HashMap<String,Integer>(variables),names);
+            rtrn = localfun.get(name).call("",true,loc,new HashMap<String,Integer>(variables),names);
         }else
         if(SIRunner.functions.containsKey(name)){
-            rtrn = SIRunner.functions.get(name).call(loc,new HashMap<String,Integer>(variables),names);
+            rtrn = SIRunner.functions.get(name).call("",true,loc,new HashMap<String,Integer>(variables),names);
         }
         return rtrn;
     }

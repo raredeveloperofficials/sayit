@@ -23,9 +23,15 @@ import SayIt.MemberAcess;
 import SayIt.BetweenContent;
 import SayIt.BetweenContentResult;
 import SayIt.basic.SIBlock;
+import SayIt.IdentifierReader;
+import SayIt.StringReturn;
+import SayIt.basic.SIFunction;
 
 public class Compiler {
     public static Compiled compile(char[] s) {
+        String cname = "",ename = "";
+        boolean staticv = true;
+        SIFunction.VisibilityMode visble = SIFunction.VisibilityMode.PUBLIC;
         ArrayList<String> pool = new ArrayList<>();
         ArrayList<Integer[]> expressions = new ArrayList<>();
         ArrayList<Integer> code = new ArrayList<>();
@@ -56,6 +62,8 @@ public class Compiler {
                                            
                                            );
                     }
+                    code.add(visble.i);
+                    code.add((staticv)?SIRunner.STATIC:SIRunner.NON_STATIC);
                     i =dec.nextInd;
                 }else{
                     AssignmentResult assres = AssignmentReader.read(s,i);
@@ -71,11 +79,44 @@ public class Compiler {
                         i = assres.nextInd;
                     }else{
                        MemberAcessResult memacess = MemberAcess.acess(s,i);
+                        i=memacess.nextInd;
                        if(memacess!=null){
                            SIMemberAcess memo = new SIMemberAcess();
+                           if(memacess!=null&&memacess.result!=null&&memacess.result.length == 1){
+                               String comand = memacess.result[0].FunctionName;
+                               if(comand.equals("class")){
+                                  
+                                   while(i+1<s.length&&Character.isWhitespace(s[i+1])){
+                                       i++;
+                                   }
+                                   StringReturn idn = IdentifierReader.read(s,i+1);
+                                   i = idn.nextInd+1;
+                                   cname =idn.gathered;
+                                   continue;
+                               }else if(comand.equals("extend")){
+                                   
+                                   while(i+1<s.length&&Character.isWhitespace(s[i+1])){
+                                       i++;
+                                   }
+                                   StringReturn idn = IdentifierReader.read(s,i+1);
+                                   i = idn.nextInd+1;
+                                   ename =idn.gathered;
+                                   continue;
+                               }else if(s.length>i&&s[i]==':'){
+                                   i++;
+                                   switch(comand){
+                                       case "public": visble = SIFunction.VisibilityMode.PUBLIC; break;
+                                       case "private": visble = SIFunction.VisibilityMode.PRIVATE; break;
+                                       case "protected": visble = SIFunction.VisibilityMode.PROTECTED; break;
+                                       case "static": staticv = true;break;
+                                       case "nonstatic": staticv = false;break;
+                                   }
+                                   
+                               }
+                           }//else System.out.println("command is no more ");
                            memo.set(memacess);
                            getTypeBytes(block,code,memo,expressions,pool,numpool);
-                           i=memacess.nextInd;
+                           
                            while(i+1<s.length&&Character.isWhitespace(s[i+1])){
                                i++;
                            }
@@ -98,7 +139,7 @@ public class Compiler {
             }
             i++;
         }
-        return new Compiled(pool.toArray(new String[0]),numpool.toArray(new Number[0]),code.toArray(new Integer[0]),expressions.toArray(new Integer[0][0]),block.toArray(new Compiled[0]));
+        return new Compiled(pool.toArray(new String[0]),numpool.toArray(new Number[0]),code.toArray(new Integer[0]),expressions.toArray(new Integer[0][0]),block.toArray(new Compiled[0]),cname,ename);
     }
     public static int memberacess(ArrayList<Compiled> c,MemberAcessResult memacess,int i,char[] s,ArrayList<Integer> code,SIObject val,ArrayList<Integer[]> expressions,ArrayList<String> pool,ArrayList<Number> numpool){
         if(memacess!=null){

@@ -13,13 +13,14 @@ import java.util.Map;
 import java.util.Stack;
 import SayIt.basic.SINull;
 import SayIt.basic.SIOverloadFunction;
+import SayIt.basic.SIString;
 
 public class SIRunner
 {
     public static final int DECLARE = 0,TYPE = 1,ASSIGN = 2,VAR = 3,EXPRESSION = 4,VALUE=5,POOL=6,CALL = 7
     ,BYCALL=8,OBJECT = 9 ,ADDRESS = 10,ARGS_START = 11,ARGS_END = 12,ADD = 13,SUB=14,MUL = 15,DIV=16,MOD = 17,
     GREATER=18,LESS=19,GREATER_OR_EQUAL=20,LESS_OR_EQUAL=21,EQUAL=22,ADD_EQUAL = 23,SUB_EQUAL=24,MUL_EQUAL=25,DIV_EQUAL=26,MOD_EQUAL=27,
-    NOT_EQUAL=28,BLOCK=29;
+    NOT_EQUAL=28,BLOCK=29,PUBLIC=30,PRIVATE=31,PROTECTED=32,STATIC=33,NON_STATIC=34;
     public static HashMap<String,SIFunction> functions = new HashMap<>();
     private static HashMap<Integer,Variable> variable_storage = new HashMap<>();
     private static Stack<Integer> variable_removed_index = new Stack<>();
@@ -41,11 +42,13 @@ public class SIRunner
         local.put(fun.name,f);
     }
     public static int addVariable(String type,SIObject obj){
+        if(!obj.name.equals(type)&&!!type.equals("any"))return -1;
         if(variable_removed_index.empty()){
            
             variable_storage.put(count,new Variable(obj,type));
             return count++ ;
         }
+        
         int i = variable_removed_index.pop();
         variable_storage.put(i,new Variable(obj,type));
         return i;
@@ -79,7 +82,8 @@ public class SIRunner
         Variable v = variable_storage.getOrDefault(i,null);
         if(v!=null){
             if(v.type.equals(val.name)&&!v.val.name.equals("null")){
-                v.val.set(val.get());//System.out.println("hehehehe");
+                
+                v.val.set(val.get());
                 variable_storage.put(i,v);
             }else if(v.val instanceof SINull){
                 v.val = val;
@@ -96,6 +100,7 @@ public class SIRunner
     
     public static SIObject run(HashMap<String,SIOverloadFunction> prevfunc,Compiled compiled,String[] namet,SIObject[] myvals,String[] names,Integer... extravalues){
         int i = 0;
+        if(!compiled.classname.isEmpty())System.out.println("running class:"+compiled.classname);
         List<String> name = new ArrayList<String>(Arrays.asList(names));
 
        HashMap<String,SIOverloadFunction> localfun = new HashMap<>();
@@ -108,6 +113,11 @@ public class SIRunner
         }
         
         HashMap<String,Integer> variables = new HashMap<>();
+        if (!Arrays.asList(names).contains("total")) {
+        SIString currentclass = new SIString();
+        currentclass.set(compiled.classname);
+        variables.put("Current_Class",addVariable("string",currentclass));
+        }
         Integer[] code = compiled.code;
         SIObject rtrn = null;
         while(i<compiled.code.length){

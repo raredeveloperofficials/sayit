@@ -34,7 +34,7 @@ public class RunnerFunctions
         return o;
     }
     public static CALL_Return getFunctionCall(Compiled c,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
-        Compiled c2 = new Compiled(c.pool,c.numpool,c.code,c.expressions,c.block);
+        Compiled c2 = new Compiled(c.pool,c.numpool,c.code,c.expressions,c.block,c.classname,c.extendedclass);
         CALL_Return r = CALL_Runner.run(c2,ind,names,extravalues,variables,localfun);
         return new CALL_Return(r.next,r.returnval);
     }
@@ -98,7 +98,7 @@ public class RunnerFunctions
         return new CALL_Return(ind,val);
     }
     public static CALL_Return calcExpressionVal(Compiled c,int exp_no,int ind,List<String> names, List<Integer> extravalues,HashMap<String,Integer> variables,HashMap<String,SIOverloadFunction> localfun){
-        Compiled c2 = new Compiled(c.pool,c.numpool,c.expressions[exp_no],c.expressions,c.block);
+        Compiled c2 = new Compiled(c.pool,c.numpool,c.expressions[exp_no],c.expressions,c.block,c.classname,c.extendedclass);
         return calcValue(c2,ind,names,extravalues,variables,localfun);
     }
 }

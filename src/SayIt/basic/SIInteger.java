@@ -15,7 +15,7 @@ public class SIInteger extends SIBaseNumber
     @Override
     public  void set(Object... val) {
         if(val.length != 1)throw new IllegalArgumentException("set Method of SIInteger need exactly 1 argument ");
-        if(!(val[0]instanceof Integer))throw new IllegalArgumentException("given argument is not an integer for SIInteger");
+        if(!(val[0]instanceof Integer))throw new IllegalArgumentException("given argument is not an integer for SIInteger ("+val[0]+")");
         i =(Integer) val[0];
     }
     

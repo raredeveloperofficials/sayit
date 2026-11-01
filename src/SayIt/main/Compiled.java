@@ -10,15 +10,21 @@ public class Compiled {
     public Integer[] code;
     public Integer[][] expressions;
     public Compiled[] block;
+    public String classname;
+    public String extendedclass;
+    public SIFunction[] functions;
+    
 
     public Compiled(String[] pool, Number[] numpool,
                     Integer[] code, Integer[][] expressions,
-                    Compiled[] block) {
+                    Compiled[] block,String classname,String extendedclass) {
         this.pool = pool;
         this.numpool = numpool;
         this.expressions = expressions;
         this.code = code;
         this.block = block;
+        this.classname = classname;
+        this.extendedclass = extendedclass;
     }
 
     // Save Compiled to a file
@@ -46,7 +52,11 @@ public class Compiled {
         }
 
         out.writeBoolean(true);
-
+        
+        
+        out.writeUTF(c.classname); 
+        out.writeUTF(c.extendedclass);
+        
         // String pool
         out.writeInt(c.pool.length);
         for (String s : c.pool) {
@@ -129,7 +139,8 @@ public class Compiled {
     ) throws IOException {
 
         if (!in.readBoolean()) return null;
-
+        String cname = in.readUTF();
+        String ename = in.readUTF();
         // String pool
         int len = in.readInt();
         String[] pool = new String[len];
@@ -204,7 +215,7 @@ public class Compiled {
         }
 
         return new Compiled(
-            pool, numpool, code, expressions, block
+            pool, numpool, code, expressions, block,cname,ename
         );
     }
 }

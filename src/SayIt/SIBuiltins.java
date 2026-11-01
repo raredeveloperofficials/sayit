@@ -274,36 +274,38 @@ public class SIBuiltins
                 public SIObject run(HashMap<String,SIOverloadFunction> localfun,HashMap<String, Integer> vars, SIObject[] vals) {
                     if (vals.length != 3
                         || !(vals[0] instanceof SIObject)
-                        || !(vals[1] instanceof SIInteger)
+                        || !(vals[1] instanceof SILong)
                         || !(vals[2] instanceof SIBlock)) {
                         return null;
                     }
 
                     SIObject vname = vals[0];
-                    SIInteger inte = (SIInteger) vals[1];
+                    SILong inte = (SILong) vals[1];
                     SIBlock block = (SIBlock) vals[2];
 
-                    SIInteger inc = new SIInteger();
-                    inc.set(0);
+                    SILong inc = new SILong();
+                    inc.set(0l);
 
                     int ind = SIRunner.addVariable("int", inc);
 
                     try {
-                        for (int i = 0; i < inte.get(); i++) {
+                        HashMap<String, Integer> currentVars = new HashMap<>(vars);
+                        currentVars.put(vname.getString(), ind);
+
+                        String[] currentK = currentVars.keySet().toArray(new String[0]);
+                        Integer[] currentV = currentVars.values().toArray(new Integer[0]);
+
+                        for (long i = 0; i < inte.get(); i++) {
                             inc.set(i);
 
-                            HashMap<String, Integer> currentVars =
-                                new HashMap<>(vars);
-
-                            currentVars.put(vname.getString(), ind);
-
-                            String[] currentK =
-                                currentVars.keySet().toArray(new String[0]);
-
-                            Integer[] currentV =
-                                currentVars.values().toArray(new Integer[0]);
-
-                            SIRunner.run(localfun,block.get(),new String[0],new SIObject[0], currentK, currentV);
+                            SIRunner.run(
+                                localfun,
+                                block.get(),
+                                new String[0],
+                                new SIObject[0],
+                                currentK,
+                                currentV
+                            );
                         }
                     } finally {
                         SIRunner.removeVariable(ind);

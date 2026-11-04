@@ -1,0 +1,46 @@
+Note: this is only for the contributors to show how i imagine to 
+build the compiler and runner to all of you so you can help with only
+java
+
+
++ -> ONE OR MORE OF something inside <>
+* -> ZERO OR MORE OF something inside <>
+OPERATOR -> + OR - OR / OR * OR & OR |
+HYBRID_ASSIGNMENT -> [OPERATOR]=
+NAME,TYPE -> A-Z and a-z, 0-9,_ in middle or last
+VALUE -> EXPRESSION OR PRIMITIVE OR FUNCTION_CALL OR NAME
+
+EXPRESSION -> (<VALUE [OPERATOR]>+)
+
+Decleration: NAME as TYPE [= VALUE]
+-> bytes:
+[DECLARE,poolindexof<NAME>,TYPE,poolindexof<TYPE>,ASSIGN,bytesof<VALUE>]
+
+Assignment: NAME HYBRID_ASSIGNMENT VALUE
+-> bytes:
+[VAR,index_of_NAME_in_POOL,byteof<HYBRID_ASSIGNMENT>,bytesof<VALUE>]
+
+bytesof<EXPRESSION> -> [EXPRESSION_START,exact_expression_bytes,EXPRESSION_END]
+bytesof<PRIMITIVE> -> bytesof<TEXT>,bytesof<NUMBER>
+bytesof<TEXT> -> [POOL,index_of_TEXT_in_POOL]
+bytesof<NUMBER> -> [VALUE,index_of_NUMBER_in_NUMPOOL]
+bytesof<FUNCTION_CALL> -> [CALL,index_of_function_name_in_POOL,ARG_START,bytesof<VALUE>*,ARG_END[,BYCALL,bytesof<VALUE>]]
+bytesof<NAME> -> [VAR,index_of_NAME_in_POOL]
+
+Statement -> Decleration* Assignment* CONDITION* WHILE* FROM*
+
+ClassCreation: { ClassContent }
+
+ClassContent -> Function* Statement* ClassCreation*
+
+Function: define NAME(Decleration*) -> TYPE {FunctionContent}
+
+FunctionContent -> Statement*
+
+CONDITION: if VALUE { FunctionContent }
+
+WHILE: while EXPRESSION { FunctionContent }
+
+FROM: from VALUE to VALUE [in VALUE] -> NAME as TYPE{ FunctionContent }
+
+
